@@ -1,73 +1,123 @@
-# Welcome to your Lovable project
+# **🚀 Momentum – Smart Ride Challenge App**
 
-## Project info
+## **Momentum is a Flutter-based multi-platform app (Web + Mobile) designed to gamify user engagement with weekly challenges and rewards. The app demonstrates how to track progress, motivate users with streak-based challenges, and enhance retention through modern UI/UX.**
 
-**URL**: https://lovable.dev/projects/2ea5742c-b825-43b3-82fe-84de31857543
+🔗 Live Demo / Preview: Momentum on Lovable
 
-## How can I edit this code?
+### **📌 Features**
+### **🔑 Authentication & User Profile**
 
-There are several ways of editing your application.
+Mock login system (email & password).
 
-**Use Lovable**
+User profile with editable details (name, picture).
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/2ea5742c-b825-43b3-82fe-84de31857543) and start prompting.
+Persistent data storage using shared_preferences.
 
-Changes made via Lovable will be committed automatically to this repo.
+### **🏆 Smart Weekly Challenges**
 
-**Use your preferred IDE**
+Main feature: “Complete 5 rides this week → Earn Double Rewards!”
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Dynamic progress bar showing completed rides out of 5.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Ride simulation button (“Start Ride”).
 
-Follow these steps:
+Automatic success celebration with confetti & animations.
 
+Challenge reset after completion with countdown for next week.
+
+### **👤 Profile Section**
+
+View total rides completed.
+
+Track challenge history & achievements.
+
+### **⚙️ Settings**
+
+Dark/Light mode toggle.
+
+Reset progress option.
+
+About app section.
+
+### **🎨 UI/UX**
+
+Built with Material 3 design system.
+
+Smooth page transitions and animations.
+
+Mobile + Web responsive.
+
+### **🛠️ Tech Stack**
+
+Framework: Flutter 3.x (Web + Mobile support)
+
+Language: Dart
+
+State Management: Provider / setState (depending on build)
+
+Storage: Shared Preferences (local persistence)
+
+UI Enhancements: Material 3, flutter_animate, rive animations
+
+### **📂 Project Structure**
+lib/
+ ┣ screens/
+ ┃ ┣ login_screen.dart
+ ┃ ┣ home_screen.dart
+ ┃ ┣ profile_screen.dart
+ ┃ ┣ settings_screen.dart
+ ┣ widgets/
+ ┃ ┣ progress_bar.dart
+ ┃ ┣ ride_button.dart
+ ┃ ┗ confetti_animation.dart
+ ┣ main.dart
+
+### **🚀 Getting Started**
+Prerequisites
+
+Install Flutter SDK
+
+Any IDE (VS Code / Android Studio)
+
+Run Locally
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+git clone https://github.com/<your-username>/momentum.git
+cd momentum
+flutter pub get
+flutter run -d chrome   # for web
+flutter run             # for mobile
 ```
+Build Web Release
+flutter build web
 
-**Edit a file directly in GitHub**
+Deploy on Firebase Hosting or GitHub Pages.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### **🌟 Demo Flow**
 
-**Use GitHub Codespaces**
+Login with any credentials.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Start rides → track progress → watch the progress bar fill.
 
-## What technologies are used for this project?
+On completing 5 rides → enjoy Congratulations screen + Rewards.
 
-This project is built with:
+Explore Profile & Settings.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### **📸 Screenshots (Optional if you add)**
 
-## How can I deploy this project?
+Login Screen
 
-Simply open [Lovable](https://lovable.dev/projects/2ea5742c-b825-43b3-82fe-84de31857543) and click on Share -> Publish.
+Weekly Challenge Screen
 
-## Can I connect a custom domain to my Lovable project?
+Reward Celebration Screen
 
-Yes, you can!
+Profile & Settings
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### **📌 Future Enhancements**
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Backend integration (Firebase / Supabase).
+
+Real ride tracking via GPS.
+
+Leaderboard with social engagement.
+
+Push notifications for reminders.
