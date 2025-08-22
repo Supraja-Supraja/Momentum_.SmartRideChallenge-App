@@ -1,14 +1,18 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import confetti from 'canvas-confetti';
-import { Calendar, Trophy, Zap } from 'lucide-react';
+import { Calendar, Trophy, Zap, Target } from 'lucide-react';
+import TopBar from '@/components/Layout/TopBar';
+import BottomNavigation from '@/components/Layout/BottomNavigation';
 
 const STORAGE_KEY = 'ride-challenge-progress';
 const STORAGE_START_KEY = 'ride-challenge-start';
 
-const WeeklyChallenge = () => {
+const Home = () => {
+  const { user, updateUser } = useAuth();
   const [ridesCompleted, setRidesCompleted] = useState(0);
   const [showCelebration, setShowCelebration] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -83,13 +87,19 @@ const WeeklyChallenge = () => {
   };
 
   const handleStartRide = () => {
-    if (ridesCompleted >= totalRides) return;
+    if (ridesCompleted >= totalRides || !user) return;
     
     setIsAnimating(true);
     
     setTimeout(() => {
       const newProgress = ridesCompleted + 1;
       setRidesCompleted(newProgress);
+      
+      // Update user's total rides
+      updateUser({ 
+        totalRides: user.totalRides + 1,
+        challengesCompleted: newProgress >= totalRides ? user.challengesCompleted + 1 : user.challengesCompleted
+      });
       
       if (newProgress >= totalRides) {
         triggerConfetti();
@@ -100,35 +110,39 @@ const WeeklyChallenge = () => {
     }, 300);
   };
 
-  const handleReset = () => {
-    setRidesCompleted(0);
-    setShowCelebration(false);
-    localStorage.setItem(STORAGE_KEY, '0');
-    localStorage.setItem(STORAGE_START_KEY, new Date().toISOString());
-    setDaysUntilReset(7);
-  };
-
   return (
-    <div className="min-h-screen p-6 flex items-center justify-center">
-      <div className="w-full max-w-md space-y-8 animate-slide-up">
-        {/* Header */}
-        <div className="text-center space-y-3">
-          <div className="flex items-center justify-center mb-4">
-            <div className="p-3 rounded-full bg-gradient-primary">
-              <Zap className="h-8 w-8 text-primary-foreground" />
-            </div>
+    <div className="min-h-screen pb-20">
+      <TopBar title="Weekly Challenge" />
+      
+      <div className="p-6 max-w-md mx-auto space-y-6">
+        {/* Challenge Header */}
+        <div className="text-center space-y-3 animate-slide-up">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Target className="h-6 w-6 text-primary" />
+            <h2 className="text-xl font-bold text-foreground">
+              Weekly Ride Challenge
+            </h2>
           </div>
-          <h1 className="text-3xl font-bold text-foreground">
-            Weekly Ride Challenge
-          </h1>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-muted-foreground">
             Complete 5 rides this week to earn double rewards!
           </p>
         </div>
 
         {/* Progress Card */}
-        <Card className="p-8 card-glow">
+        <Card className="p-6 card-glow animate-slide-up">
           <div className="space-y-6">
+            {/* Progress Stats */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-center p-3 rounded-lg bg-primary/10">
+                <div className="text-2xl font-bold text-primary">{ridesCompleted}</div>
+                <div className="text-xs text-muted-foreground">Completed</div>
+              </div>
+              <div className="text-center p-3 rounded-lg bg-muted">
+                <div className="text-2xl font-bold text-foreground">{totalRides - ridesCompleted}</div>
+                <div className="text-xs text-muted-foreground">Remaining</div>
+              </div>
+            </div>
+            
             {/* Progress Bar */}
             <div className="space-y-3">
               <div className="flex justify-between items-center">
@@ -141,7 +155,7 @@ const WeeklyChallenge = () => {
               </div>
               
               <div className="relative">
-                <div className="h-3 bg-progress-bg rounded-full overflow-hidden">
+                <div className="h-4 bg-progress-bg rounded-full overflow-hidden">
                   <div 
                     className={`h-full bg-gradient-primary rounded-full transition-all duration-500 ease-out progress-glow ${
                       isAnimating ? 'animate-pulse' : ''
@@ -151,7 +165,7 @@ const WeeklyChallenge = () => {
                 </div>
                 {isCompleted && (
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <Trophy className="h-4 w-4 text-primary-foreground animate-bounce" />
+                    <Trophy className="h-5 w-5 text-primary-foreground animate-bounce" />
                   </div>
                 )}
               </div>
@@ -173,7 +187,10 @@ const WeeklyChallenge = () => {
                   Challenge Complete!
                 </div>
               ) : (
-                `Start Ride ${ridesCompleted + 1}`
+                <div className="flex items-center gap-2">
+                  <Zap className="h-5 w-5" />
+                  Start Ride {ridesCompleted + 1}
+                </div>
               )}
             </Button>
 
@@ -185,14 +202,24 @@ const WeeklyChallenge = () => {
           </div>
         </Card>
 
-        {/* Reset Button (Dev convenience) */}
-        <Button
-          onClick={handleReset}
-          variant="outline"
-          className="w-full"
-        >
-          Reset Challenge
-        </Button>
+        {/* Weekly Stats */}
+        <Card className="p-4 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+          <h3 className="font-semibold text-foreground mb-3">This Week</h3>
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div>
+              <div className="text-lg font-bold text-primary">{user?.totalRides || 0}</div>
+              <div className="text-xs text-muted-foreground">Total Rides</div>
+            </div>
+            <div>
+              <div className="text-lg font-bold text-success">{user?.challengesCompleted || 0}</div>
+              <div className="text-xs text-muted-foreground">Challenges</div>
+            </div>
+            <div>
+              <div className="text-lg font-bold text-foreground">{daysUntilReset}</div>
+              <div className="text-xs text-muted-foreground">Days Left</div>
+            </div>
+          </div>
+        </Card>
 
         {/* Celebration Dialog */}
         <Dialog open={showCelebration} onOpenChange={setShowCelebration}>
@@ -222,8 +249,10 @@ const WeeklyChallenge = () => {
           </DialogContent>
         </Dialog>
       </div>
+
+      <BottomNavigation />
     </div>
   );
 };
 
-export default WeeklyChallenge;
+export default Home;
